@@ -6,336 +6,213 @@
 <title>Ratio — Deal Analyser</title>
 <!-- PLACEHOLDER: Meta Pixel tracking -->
 <!-- PLACEHOLDER: Google Analytics -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ========== RESET & BASE ========== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dark:#1E1E1E;
-  --dark-mid:#2A2A2A;
-  --dark-soft:#3A3A3A;
-  --giallo:#F5C518;
-  --giallo-hover:#E0B400;
-  --giallo-bg:rgba(245,197,24,.08);
-  --verde:#22A352;
-  --verde-bg:#E8F5EC;
-  --rosso:#D63031;
-  --rosso-bg:#FDECEC;
-  --arancio:#E67E22;
-  --arancio-bg:#FFF5E6;
-  --grigio-bg:#F4F5F7;
-  --grigio-bordo:#DCDFE4;
-  --grigio-testo:#6B7280;
-  --grigio-chiaro:#ECEEF1;
-  --bianco:#FFFFFF;
-  --testo:#111318;
-  --radius:8px;
-  --shadow:0 1px 3px rgba(0,0,0,.06);
-  --shadow-md:0 4px 14px rgba(0,0,0,.08);
-  --transition:all .2s ease;
+  --dark:#171717;--dark-mid:#232323;--dark-soft:#333;
+  --gold:#F0B90B;--gold-hover:#D9A600;--gold-soft:rgba(240,185,11,.10);--gold-glow:rgba(240,185,11,.18);
+  --green:#16A34A;--green-bg:#ECFDF5;
+  --red:#DC2626;--red-bg:#FEF2F2;
+  --amber:#D97706;--amber-bg:#FFFBEB;
+  --bg:#F5F4F0;--surface:#FFFFFF;--border:#E8E6E0;--border-light:#F0EDE8;
+  --text:#1A1A1A;--text-mid:#555;--text-light:#8A8780;--text-faint:#B0ADA6;
+  --radius:10px;--radius-lg:14px;--radius-sm:6px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.04);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --font-ui:'Figtree',sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',monospace;
+  --ease:cubic-bezier(.4,0,.2,1);
 }
 html{font-size:16px;scroll-behavior:smooth}
-body{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:var(--grigio-bg);
-  color:var(--testo);
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
-/* ========== HEADER ========== */
-.header{
-  position:sticky;top:0;z-index:100;
-  background:var(--dark);
-  color:var(--bianco);
-  padding:0 1.25rem;
-  height:56px;
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 2px 12px rgba(0,0,0,.2);
-}
+/* === HEADER === */
+.header{position:sticky;top:0;z-index:100;background:var(--dark);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(240,185,11,.3),transparent)}
 .header-left{display:flex;align-items:center;gap:.75rem}
-.header-logo{height:32px;width:auto;display:block}
+.header-logo{height:30px;width:auto;display:block;opacity:.95}
 .header-actions{display:flex;gap:.5rem;align-items:center}
-.btn-header{
-  background:transparent;border:1.5px solid rgba(255,255,255,.2);
-  color:var(--bianco);padding:.4rem .7rem;border-radius:var(--radius);
-  font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--transition);
-  display:flex;align-items:center;gap:.3rem;
-}
-.btn-header:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4)}
+.btn-header{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.75);padding:.45rem .75rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;font-family:var(--font-ui);cursor:pointer;transition:all .2s var(--ease);display:flex;align-items:center;gap:.35rem;letter-spacing:.01em}
+.btn-header:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff}
 .btn-header svg{width:14px;height:14px;fill:currentColor}
 
-/* ========== ACCORDION ========== */
-.main{max-width:900px;margin:0 auto;padding:1.25rem 1rem 2rem}
+/* === MAIN === */
+.main{max-width:880px;margin:0 auto;padding:1.5rem 1rem 2.5rem}
 
-.accordion{
-  background:var(--bianco);
-  border:1px solid var(--grigio-bordo);
-  border-radius:var(--radius);
-  margin-bottom:.75rem;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-.accordion-trigger{
-  width:100%;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 1.25rem;
-  background:none;border:none;
-  font-family:inherit;font-size:.9rem;font-weight:700;
-  color:var(--testo);
-  cursor:pointer;
-  transition:var(--transition);
-  text-align:left;
-  gap:.75rem;
-}
-.accordion-trigger:hover{background:var(--grigio-bg)}
-.accordion-trigger .acc-left{display:flex;align-items:center;gap:.6rem}
-.accordion-trigger .acc-num{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:24px;height:24px;border-radius:6px;flex-shrink:0;
-  background:var(--grigio-chiaro);color:var(--grigio-testo);
-  font-size:.72rem;font-weight:800;
-  transition:var(--transition);
-}
-.accordion.open .accordion-trigger .acc-num{background:var(--dark);color:var(--giallo)}
-.accordion-trigger .acc-hint{
-  font-size:.7rem;font-weight:500;color:var(--grigio-testo);
-  transition:var(--transition);
-}
+/* === ACCORDION === */
+.accordion{background:var(--surface);border-radius:var(--radius-lg);margin-bottom:.65rem;box-shadow:var(--shadow);overflow:hidden;border:1px solid transparent;transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.accordion.open{box-shadow:var(--shadow-md);border-color:var(--border)}
+.accordion-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:none;border:none;font-family:var(--font-ui);font-size:.88rem;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s var(--ease);text-align:left;gap:.75rem;letter-spacing:-.01em}
+.accordion-trigger:hover{background:rgba(0,0,0,.015)}
+.accordion-trigger .acc-left{display:flex;align-items:center;gap:.65rem}
+.accordion-trigger .acc-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;flex-shrink:0;background:var(--border-light);color:var(--text-light);font-size:.7rem;font-weight:800;transition:all .25s var(--ease);font-family:var(--font-mono)}
+.accordion.open .accordion-trigger .acc-num{background:var(--dark);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.accordion-trigger .acc-hint{font-size:.68rem;font-weight:500;color:var(--text-faint);transition:all .2s var(--ease)}
 .accordion.open .accordion-trigger .acc-hint{opacity:0;width:0;overflow:hidden;padding:0;margin:0}
-.accordion-trigger .chevron{
-  width:20px;height:20px;flex-shrink:0;
-  transition:transform .25s ease;
-  fill:var(--grigio-testo);
-}
-.accordion.open .accordion-trigger .chevron{transform:rotate(180deg);fill:var(--dark)}
-.accordion-body{
-  max-height:0;overflow:hidden;
-  transition:max-height .35s ease;
-}
-.accordion.open .accordion-body{max-height:3000px}
+.accordion-trigger .chevron{width:18px;height:18px;flex-shrink:0;transition:transform .3s var(--ease);fill:var(--text-faint)}
+.accordion.open .accordion-trigger .chevron{transform:rotate(180deg);fill:var(--text)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+.accordion.open .accordion-body{max-height:5000px}
 .accordion-inner{padding:0 1.25rem 1.25rem}
+.accordion-divider{height:1px;background:var(--border-light);margin:0 1.25rem}
+.accordion.open .accordion-divider{background:var(--border)}
 
-/* ========== CARDS (inside accordion) ========== */
-.card{
-  background:var(--grigio-bg);
-  border:1px solid var(--grigio-bordo);
-  border-radius:var(--radius);
-  padding:1rem;
-  margin-bottom:.75rem;
-}
+/* === CARDS === */
+.card{background:var(--bg);border-radius:var(--radius);padding:1rem;margin-bottom:.75rem;border:1px solid var(--border-light)}
 .card:last-child{margin-bottom:0}
-.card-title{
-  font-size:.8rem;font-weight:700;color:var(--dark);
-  margin-bottom:.75rem;
-  padding-bottom:.4rem;
-  border-bottom:1px solid var(--grigio-bordo);
-  text-transform:uppercase;letter-spacing:.04em;
-}
+.card-title{font-size:.68rem;font-weight:700;color:var(--text-light);margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--border-light);text-transform:uppercase;letter-spacing:.06em}
 
-/* ========== FORM ELEMENTS ========== */
-.form-grid{display:grid;grid-template-columns:1fr;gap:.65rem}
-@media(min-width:600px){.form-grid.cols-2{grid-template-columns:1fr 1fr}}
-@media(min-width:600px){.form-grid.cols-3{grid-template-columns:1fr 1fr 1fr}}
-
+/* === FORM === */
+.form-grid{display:grid;grid-template-columns:1fr;gap:.6rem}
+@media(min-width:600px){.form-grid.cols-2{grid-template-columns:1fr 1fr}.form-grid.cols-3{grid-template-columns:1fr 1fr 1fr}}
 .field{display:flex;flex-direction:column;gap:.2rem}
-.field label{font-size:.7rem;font-weight:600;color:var(--grigio-testo);text-transform:uppercase;letter-spacing:.04em}
-.field input,.field select{
-  padding:.5rem .6rem;
-  border:1.5px solid var(--grigio-bordo);
-  border-radius:6px;
-  font-size:.88rem;
-  font-family:inherit;
-  color:var(--testo);
-  background:var(--bianco);
-  transition:var(--transition);
-  width:100%;
-}
-.field input:focus,.field select:focus{
-  outline:none;border-color:var(--dark-soft);
-  box-shadow:0 0 0 3px rgba(30,30,30,.08);
-}
-.field input[readonly]{background:var(--grigio-chiaro);color:var(--grigio-testo);cursor:default}
-.field .unit{font-size:.65rem;color:var(--grigio-testo);margin-top:.1rem}
+.field label{font-size:.67rem;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select{padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;font-family:var(--font-ui);font-weight:500;color:var(--text);background:var(--surface);transition:all .2s var(--ease);width:100%;font-variant-numeric:tabular-nums}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.field input[readonly]{background:var(--bg);color:var(--text-light);border-style:dashed;cursor:default}
+.field input[readonly]:focus{border-color:var(--border);box-shadow:none}
+.field .unit{font-size:.62rem;color:var(--text-faint);margin-top:.1rem;font-weight:500}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%238A8780' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .6rem center;padding-right:2rem}
 
-/* ========== METRICS ========== */
-.metrics-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:.6rem;
-  margin-top:.65rem;
-}
-@media(min-width:600px){.metrics-row.cols-4{grid-template-columns:repeat(4,1fr)}}
-@media(min-width:600px){.metrics-row.cols-3{grid-template-columns:repeat(3,1fr)}}
+/* === METRICS === */
+.metrics-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.65rem}
+@media(min-width:600px){.metrics-row.cols-4{grid-template-columns:repeat(4,1fr)}.metrics-row.cols-3{grid-template-columns:repeat(3,1fr)}}
+.metric{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius);padding:.65rem .75rem;text-align:center;position:relative;transition:all .2s var(--ease)}
+.metric::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2.5px;height:60%;border-radius:2px;background:var(--border);transition:background .2s var(--ease)}
+.metric:hover::before{background:var(--gold)}
+.metric .metric-label{font-size:.6rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+.metric .metric-value{font-family:var(--font-mono);font-size:1rem;font-weight:700;color:var(--dark);letter-spacing:-.02em}
+.metric .metric-value.sm{font-size:.85rem}
 
-.metric{
-  background:var(--bianco);
-  border:1px solid var(--grigio-bordo);
-  border-radius:6px;
-  padding:.6rem;
-  text-align:center;
-}
-.metric .metric-label{font-size:.65rem;font-weight:600;color:var(--grigio-testo);text-transform:uppercase;letter-spacing:.03em;margin-bottom:.2rem}
-.metric .metric-value{font-size:1.1rem;font-weight:700;color:var(--dark)}
-.metric .metric-value.sm{font-size:.9rem}
+/* === SEMAFORO === */
+.semaforo{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:20px;font-size:.72rem;font-weight:700;font-family:var(--font-ui);letter-spacing:.01em}
+.semaforo.verde{background:var(--green-bg);color:var(--green)}
+.semaforo.giallo{background:var(--amber-bg);color:var(--amber)}
+.semaforo.rosso{background:var(--red-bg);color:var(--red)}
+.semaforo .dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
+.semaforo .semaforo-text{line-height:1}
 
-/* ========== SEMAFORO ========== */
-.semaforo{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.3rem .7rem;border-radius:20px;
-  font-size:.75rem;font-weight:700;
-}
-.semaforo.verde{background:var(--verde-bg);color:var(--verde)}
-.semaforo.giallo{background:var(--arancio-bg);color:var(--arancio)}
-.semaforo.rosso{background:var(--rosso-bg);color:var(--rosso)}
-.semaforo .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+/* === TOTAL BOX === */
+.total-box{background:var(--dark);color:#fff;border-radius:var(--radius);padding:.85rem 1.1rem;display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;position:relative;overflow:hidden}
+.total-box::before{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;background:radial-gradient(circle,var(--gold-glow),transparent 70%);pointer-events:none}
+.total-box .total-label{font-size:.78rem;font-weight:600;opacity:.8}
+.total-box .total-value{font-family:var(--font-mono);font-size:1.15rem;font-weight:700;color:var(--gold);letter-spacing:-.02em}
 
-/* ========== TOTAL BOX ========== */
-.total-box{
-  background:var(--dark);color:var(--bianco);
-  border-radius:var(--radius);padding:.85rem 1rem;
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:.75rem;
-}
-.total-box .total-label{font-size:.8rem;font-weight:600}
-.total-box .total-value{font-size:1.2rem;font-weight:800;color:var(--giallo)}
+/* === EXIT TOGGLE === */
+.exit-toggle{display:flex;background:var(--bg);border-radius:var(--radius);padding:3px;margin-bottom:.85rem;border:1px solid var(--border-light)}
+.exit-toggle button{flex:1;padding:.55rem;background:transparent;border:none;border-radius:calc(var(--radius) - 2px);font-family:var(--font-ui);font-size:.8rem;font-weight:600;color:var(--text-light);cursor:pointer;transition:all .25s var(--ease)}
+.exit-toggle button.active{background:var(--dark);color:var(--gold);box-shadow:var(--shadow-sm)}
 
-/* ========== SCENARIO TABLE ========== */
-.scenario-grid{
-  display:grid;grid-template-columns:1fr;gap:.6rem;
-  margin-top:.65rem;
-}
+/* === SCENARIO === */
+.scenario-grid{display:grid;grid-template-columns:1fr;gap:.6rem;margin-top:.65rem}
 @media(min-width:600px){.scenario-grid{grid-template-columns:repeat(3,1fr)}}
-.scenario-card{
-  border:1.5px solid var(--grigio-bordo);
-  border-radius:var(--radius);
-  padding:.85rem;
-  text-align:center;
-  background:var(--bianco);
-}
-.scenario-card.base{border-color:var(--dark);background:var(--giallo-bg)}
-.scenario-card h4{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem;color:var(--grigio-testo)}
+.scenario-card{border:1.5px solid var(--border-light);border-radius:var(--radius);padding:.85rem;text-align:center;background:var(--surface);transition:all .2s var(--ease)}
+.scenario-card.base{border-color:var(--gold);background:var(--gold-soft)}
+.scenario-card h4{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.55rem;color:var(--text-faint)}
 .scenario-card.base h4{color:var(--dark)}
-.scenario-row{display:flex;justify-content:space-between;padding:.25rem 0;font-size:.78rem;border-bottom:1px solid var(--grigio-chiaro)}
+.scenario-row{display:flex;justify-content:space-between;padding:.25rem 0;font-size:.76rem;border-bottom:1px solid var(--border-light)}
 .scenario-row:last-child{border-bottom:none}
-.scenario-row .s-label{color:var(--grigio-testo)}
-.scenario-row .s-value{font-weight:700;color:var(--testo)}
+.scenario-row .s-label{color:var(--text-light);font-weight:500}
+.scenario-row .s-value{font-weight:700;color:var(--text);font-family:var(--font-mono);font-size:.72rem}
 
-/* ========== DUE DILIGENCE BUTTON ========== */
-.dd-trigger{
-  display:flex;align-items:center;gap:.5rem;
-  padding:.65rem 1rem;
-  background:var(--bianco);
-  border:1.5px solid var(--grigio-bordo);
-  border-radius:var(--radius);
-  font-family:inherit;font-size:.85rem;font-weight:600;
-  color:var(--dark);cursor:pointer;
-  transition:var(--transition);
-  margin-top:.5rem;
-  box-shadow:var(--shadow);
-  width:100%;
-  justify-content:center;
-}
-.dd-trigger:hover{border-color:var(--dark-soft);background:var(--grigio-bg)}
-.dd-trigger .dd-icon{
-  width:22px;height:22px;
-  background:var(--dark);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--giallo);font-size:.8rem;font-weight:800;flex-shrink:0;
-}
+/* === HIGHLIGHT METRIC === */
+.metric-highlight{background:var(--gold-soft);border:1.5px solid rgba(240,185,11,.25);border-radius:var(--radius)}
+.metric-highlight::before{background:var(--gold)!important}
 
-/* ========== MODAL OVERLAY ========== */
-.modal-overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(0,0,0,.55);
-  z-index:200;
-  display:none;align-items:flex-start;justify-content:center;
-  padding:2rem 1rem;
-  overflow-y:auto;
-}
+/* === CTA RATIO === */
+.cta-ratio{background:var(--dark);border-radius:var(--radius-lg);padding:2.5rem 1.5rem 2rem;margin-top:1.25rem;text-align:center;position:relative;overflow:hidden}
+.cta-ratio::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(ellipse,rgba(240,185,11,.12) 0%,transparent 65%);pointer-events:none}
+.cta-ratio::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(240,185,11,.2),transparent)}
+.cta-logo{height:40px;width:auto;display:block;margin:0 auto .85rem;opacity:.9}
+.cta-ratio .cta-badge{display:inline-block;background:rgba(240,185,11,.12);color:var(--gold);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.3rem .8rem;border-radius:20px;margin-bottom:.85rem;border:1px solid rgba(240,185,11,.2)}
+.cta-ratio h3{color:#fff;font-size:1.3rem;font-weight:800;margin-bottom:.35rem;line-height:1.35;letter-spacing:-.02em;max-width:480px;margin-left:auto;margin-right:auto}
+.cta-ratio .cta-sub{color:rgba(255,255,255,.5);font-size:.82rem;margin-bottom:1.35rem;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.5}
+.zone-selector{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.1rem;flex-wrap:wrap}
+.zone-btn{padding:.5rem 1.1rem;border:1.5px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);background:rgba(255,255,255,.04);color:rgba(255,255,255,.55);font-family:var(--font-ui);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .25s var(--ease);letter-spacing:.01em}
+.zone-btn:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+.zone-btn.active{border-color:var(--gold);background:rgba(240,185,11,.1);color:var(--gold)}
+.cta-price{display:flex;align-items:baseline;justify-content:center;gap:.4rem;margin-bottom:.85rem}
+.cta-price .price-big{color:var(--gold);font-family:var(--font-mono);font-size:2.2rem;font-weight:700;letter-spacing:-.03em}
+.cta-price .price-detail{color:rgba(255,255,255,.4);font-size:.8rem}
+.btn-cta{display:inline-block;background:var(--gold);color:var(--dark);font-family:var(--font-ui);font-size:.95rem;font-weight:700;padding:.75rem 2.5rem;border:none;border-radius:var(--radius);cursor:pointer;transition:all .25s var(--ease);text-decoration:none;letter-spacing:.01em;box-shadow:0 4px 16px rgba(240,185,11,.3)}
+.btn-cta:hover{background:var(--gold-hover);transform:translateY(-1px);box-shadow:0 6px 24px rgba(240,185,11,.35)}
+.cta-note{color:rgba(255,255,255,.3);font-size:.68rem;margin-top:.65rem}
+
+/* === DUE DILIGENCE BUTTON === */
+.dd-trigger{display:flex;align-items:center;gap:.55rem;padding:.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-ui);font-size:.82rem;font-weight:600;color:var(--text);cursor:pointer;transition:all .2s var(--ease);margin-top:.65rem;box-shadow:var(--shadow-sm);width:100%;justify-content:center}
+.dd-trigger:hover{border-color:var(--dark-soft);box-shadow:var(--shadow);background:var(--bg)}
+.dd-trigger .dd-icon{width:22px;height:22px;background:var(--dark);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.75rem;font-weight:800;flex-shrink:0;font-family:var(--font-mono)}
+
+/* === MODAL === */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
 .modal-overlay.visible{display:flex}
-.modal{
-  background:var(--bianco);
-  border-radius:12px;
-  width:100%;max-width:640px;
-  box-shadow:0 20px 60px rgba(0,0,0,.25);
-  animation:modalIn .25s ease;
-}
-@keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.modal-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 1.25rem;
-  border-bottom:1px solid var(--grigio-bordo);
-}
-.modal-header h2{font-size:1rem;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:.5rem}
-.modal-close{
-  width:32px;height:32px;border-radius:50%;
-  background:var(--grigio-chiaro);border:none;
-  font-size:1.1rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--grigio-testo);transition:var(--transition);
-}
-.modal-close:hover{background:var(--grigio-bordo);color:var(--testo)}
+.modal{background:var(--surface);border-radius:var(--radius-lg);width:100%;max-width:640px;box-shadow:var(--shadow-lg);animation:modalIn .3s var(--ease)}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border-light)}
+.modal-header h2{font-size:.95rem;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:.5rem;letter-spacing:-.01em}
+.modal-close{width:30px;height:30px;border-radius:8px;background:var(--bg);border:1px solid var(--border-light);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-light);transition:all .2s var(--ease)}
+.modal-close:hover{background:var(--border-light);color:var(--text)}
 .modal-body{padding:1rem 1.25rem 1.5rem}
-
-/* Checklist inside modal */
 .checklist-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
-.progress-bar-wrap{
-  width:100%;height:6px;background:var(--grigio-chiaro);
-  border-radius:3px;overflow:hidden;margin-top:.4rem;
-}
-.progress-bar{height:100%;background:var(--dark);border-radius:3px;transition:width .3s ease}
-.progress-text{font-size:.78rem;font-weight:700;color:var(--dark)}
-.checklist-category{
-  font-size:.7rem;font-weight:700;color:var(--dark);
-  text-transform:uppercase;letter-spacing:.04em;
-  margin:1rem 0 .4rem;padding-bottom:.2rem;
-  border-bottom:1px solid var(--grigio-bordo);
-}
-.checklist-item{
-  display:flex;align-items:flex-start;gap:.5rem;
-  padding:.45rem 0;
-  border-bottom:1px solid var(--grigio-chiaro);
-}
+.progress-bar-wrap{width:100%;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:.45rem}
+.progress-bar{height:100%;background:var(--dark);border-radius:3px;transition:width .35s var(--ease)}
+.progress-text{font-size:.76rem;font-weight:700;color:var(--dark);font-variant-numeric:tabular-nums}
+.checklist-category{font-size:.65rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid var(--border-light)}
+.checklist-item{display:flex;align-items:flex-start;gap:.5rem;padding:.5rem 0;border-bottom:1px solid var(--border-light)}
 .checklist-item:last-child{border-bottom:none}
-.checklist-item input[type="checkbox"]{
-  width:16px;height:16px;flex-shrink:0;margin-top:2px;
-  accent-color:var(--dark);cursor:pointer;
-}
-.checklist-item label{font-size:.82rem;cursor:pointer;line-height:1.4}
-.checklist-item.checked label{color:var(--grigio-testo);text-decoration:line-through}
+.checklist-item input[type="checkbox"]{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--dark);cursor:pointer;border-radius:4px}
+.checklist-item label{font-size:.8rem;cursor:pointer;line-height:1.45;font-weight:500;color:var(--text)}
+.checklist-item.checked label{color:var(--text-faint);text-decoration:line-through}
 
-/* ========== FOOTER ========== */
-.footer{
-  text-align:center;padding:1.5rem 1rem 1.25rem;
-  font-size:.72rem;color:var(--grigio-testo);
-}
+/* === FOOTER === */
+.footer{text-align:center;padding:1.5rem 1rem 1.25rem;font-size:.7rem;color:var(--text-faint);letter-spacing:.01em}
+.footer strong{color:var(--text-light);font-weight:700}
 
-/* ========== PRINT ========== */
-@media print{
-  .header{position:relative!important}
-  .accordion-body{max-height:none!important}
-  .accordion{break-inside:avoid}
-  .accordion-trigger .acc-hint{display:none}
-  .modal-overlay{display:none!important}
-  .dd-trigger{display:none}
-  body{background:#fff}
-  .main{max-width:100%;padding:0}
-  .accordion{box-shadow:none;border:1px solid #ccc}
-}
+/* === CHECKBOX INLINE === */
+.inline-check{display:flex;align-items:center;gap:.5rem;margin:.75rem 0}
+.inline-check input[type="checkbox"]{width:16px;height:16px;accent-color:var(--dark);cursor:pointer;flex-shrink:0}
+.inline-check label{font-size:.8rem;font-weight:600;cursor:pointer;color:var(--text);line-height:1.4}
 
-/* ========== RESPONSIVE ========== */
+/* === ANIMATIONS === */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.accordion{animation:fadeUp .4s var(--ease) both}
+.accordion:nth-child(1){animation-delay:.05s}
+.accordion:nth-child(2){animation-delay:.1s}
+.accordion:nth-child(3){animation-delay:.15s}
+.accordion:nth-child(4){animation-delay:.2s}
+.accordion:nth-child(5){animation-delay:.25s}
+.accordion:nth-child(6){animation-delay:.3s}
+.dd-trigger{animation:fadeUp .4s var(--ease) .35s both}
+.cta-ratio{animation:fadeUp .4s var(--ease) .4s both}
+
+/* === PRINT === */
+@media print{.header{position:relative!important}.accordion-body{max-height:none!important}.accordion{break-inside:avoid;animation:none!important}.modal-overlay,.dd-trigger,.cta-ratio,.header-actions{display:none!important}body{background:#fff}.main{max-width:100%;padding:0}.accordion{box-shadow:none;border:1px solid #ddd}}
+
+/* === RESPONSIVE === */
 @media(max-width:599px){
   .metrics-row.cols-4{grid-template-columns:1fr 1fr}
-  .header{padding:0 .75rem}
-  .header-logo{height:26px}
+  .header{padding:0 .85rem;height:54px}
+  .header-logo{height:24px}
   .btn-header span.btn-text{display:none}
   .main{padding:1rem .65rem 2rem}
   .accordion-inner{padding:0 .85rem 1rem}
   .accordion-trigger{padding:.85rem}
+  .cta-ratio{padding:1.75rem 1rem 1.5rem;border-radius:var(--radius)}
+  .cta-ratio h3{font-size:1.1rem}
+  .cta-logo{height:32px}
+  .metric .metric-value{font-size:.9rem}
+  .total-box{flex-direction:column;gap:.3rem;text-align:center}
+  .total-box .total-value{font-size:1.1rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ========== HEADER ========== -->
 <header class="header">
   <div class="header-left">
     <img src="logo.png" alt="Ratio Deal Analyser" class="header-logo">
@@ -352,311 +229,241 @@ body{
   </div>
 </header>
 
-<!-- ========== MAIN ========== -->
 <main class="main">
 
-<!-- ===== 1. DASHBOARD — aperto ===== -->
+<!-- 1. DASHBOARD -->
 <div class="accordion open" id="acc0">
   <button class="accordion-trigger" onclick="toggleAcc('acc0')">
     <span class="acc-left"><span class="acc-num">1</span>Dashboard Riepilogo</span>
     <span class="acc-hint">Espandi</span>
     <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
   </button>
-  <div class="accordion-body">
-    <div class="accordion-inner">
-      <div class="form-grid cols-3">
-        <div class="field">
-          <label>Prezzo acquisto (&euro;)</label>
-          <input type="number" id="prezzoAcquisto" placeholder="es. 150000" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Prezzo vendita stimato (&euro;)</label>
-          <input type="number" id="prezzoVendita" placeholder="es. 220000" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Superficie (mq)</label>
-          <input type="number" id="mq" placeholder="es. 75" oninput="calcAll()">
-        </div>
-      </div>
-      <div class="metrics-row cols-4" style="margin-top:.75rem">
-        <div class="metric">
-          <div class="metric-label">&euro;/mq Acquisto</div>
-          <div class="metric-value" id="mqAcquisto">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">&euro;/mq Vendita</div>
-          <div class="metric-value" id="mqVendita">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Margine lordo</div>
-          <div class="metric-value" id="margineLordo">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">ROI lordo</div>
-          <div class="metric-value" id="roiLordo">&mdash;</div>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:.75rem">
-        <span class="semaforo" id="semaforoDash" style="visibility:hidden">
-          <span class="dot"></span><span class="semaforo-text"></span>
-        </span>
-      </div>
+  <div class="accordion-divider"></div>
+  <div class="accordion-body"><div class="accordion-inner">
+    <div class="form-grid cols-3" style="margin-top:.85rem">
+      <div class="field"><label>Prezzo acquisto (&euro;)</label><input type="number" id="prezzoAcquisto" placeholder="es. 150000" oninput="calcAll()"></div>
+      <div class="field"><label>Prezzo vendita stimato (&euro;)</label><input type="number" id="prezzoVendita" placeholder="es. 220000" oninput="calcAll()"></div>
+      <div class="field"><label>Superficie (mq)</label><input type="number" id="mq" placeholder="es. 75" oninput="calcAll()"></div>
     </div>
-  </div>
+    <div class="metrics-row cols-4" style="margin-top:.85rem">
+      <div class="metric"><div class="metric-label">&euro;/mq Acquisto</div><div class="metric-value" id="mqAcquisto">&mdash;</div></div>
+      <div class="metric"><div class="metric-label">&euro;/mq Vendita</div><div class="metric-value" id="mqVendita">&mdash;</div></div>
+      <div class="metric"><div class="metric-label">Margine lordo</div><div class="metric-value" id="margineLordo">&mdash;</div></div>
+      <div class="metric"><div class="metric-label">ROI lordo</div><div class="metric-value" id="roiLordo">&mdash;</div></div>
+    </div>
+    <div style="text-align:center;margin-top:.85rem">
+      <span class="semaforo" id="semaforoDash" style="visibility:hidden"><span class="dot"></span><span class="semaforo-text"></span></span>
+    </div>
+  </div></div>
 </div>
 
-<!-- ===== 2. COSTI ACQUISTO — chiuso ===== -->
+<!-- 2. COSTI ACQUISTO -->
 <div class="accordion" id="acc1">
   <button class="accordion-trigger" onclick="toggleAcc('acc1')">
     <span class="acc-left"><span class="acc-num">2</span>Costi di Acquisto</span>
     <span class="acc-hint">Espandi</span>
     <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
   </button>
-  <div class="accordion-body">
-    <div class="accordion-inner">
-      <div class="form-grid cols-3">
-        <div class="field">
-          <label>Prezzo acquisto (&euro;)</label>
-          <input type="number" id="prezzoAcquisto2" readonly>
-          <div class="unit">Da Dashboard</div>
-        </div>
-        <div class="field">
-          <label>% Agenzia acquisto</label>
-          <input type="number" id="percAgenzia" value="3" step="0.5" min="0" max="10" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Tipo immobile</label>
-          <select id="tipoImmobile" onchange="calcAll()">
-            <option value="prima">Prima casa</option>
-            <option value="seconda" selected>Seconda casa / Investimento</option>
-            <option value="ristrutturare">Immobile da ristrutturare</option>
-          </select>
-        </div>
-      </div>
-      <div class="metrics-row cols-2" style="margin-top:.75rem">
-        <div class="metric">
-          <div class="metric-label">Imposta di registro</div>
-          <div class="metric-value sm" id="impostaRegistro">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Imposte ipo. + catastale</div>
-          <div class="metric-value sm" id="imposteIpoCat">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Costi notarili (stima)</div>
-          <div class="metric-value sm" id="costiNotarili">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Costi agenzia</div>
-          <div class="metric-value sm" id="costiAgenzia">&mdash;</div>
-        </div>
-      </div>
-      <div class="total-box">
-        <div class="total-label">Totale costo acquisto all-in</div>
-        <div class="total-value" id="totaleAcquisto">&euro; &mdash;</div>
+  <div class="accordion-divider"></div>
+  <div class="accordion-body"><div class="accordion-inner">
+    <div class="form-grid cols-3" style="margin-top:.85rem">
+      <div class="field"><label>Prezzo acquisto (&euro;)</label><input type="number" id="prezzoAcquisto2" readonly><div class="unit">Da Dashboard</div></div>
+      <div class="field"><label>% Agenzia acquisto</label><input type="number" id="percAgenzia" value="3" step="0.5" min="0" max="10" oninput="calcAll()"></div>
+      <div class="field"><label>Tipo immobile</label>
+        <select id="tipoImmobile" onchange="calcAll()">
+          <option value="prima">Prima casa</option>
+          <option value="seconda" selected>Seconda casa / Investimento</option>
+          <option value="ristrutturare">Immobile da ristrutturare</option>
+        </select>
       </div>
     </div>
-  </div>
+    <div class="metrics-row cols-2" style="margin-top:.85rem">
+      <div class="metric"><div class="metric-label">Imposta di registro</div><div class="metric-value sm" id="impostaRegistro">&mdash;</div></div>
+      <div class="metric"><div class="metric-label">Imposte ipo. + catastale</div><div class="metric-value sm" id="imposteIpoCat">&mdash;</div></div>
+      <div class="metric"><div class="metric-label">Costi notarili (stima)</div><div class="metric-value sm" id="costiNotarili">&mdash;</div></div>
+      <div class="metric"><div class="metric-label">Costi agenzia</div><div class="metric-value sm" id="costiAgenzia">&mdash;</div></div>
+    </div>
+    <div class="total-box"><div class="total-label">Totale costo acquisto all-in</div><div class="total-value" id="totaleAcquisto">&euro; &mdash;</div></div>
+  </div></div>
 </div>
 
-<!-- ===== 3. RISTRUTTURAZIONE — chiuso ===== -->
+<!-- 3. RISTRUTTURAZIONE -->
 <div class="accordion" id="acc2">
   <button class="accordion-trigger" onclick="toggleAcc('acc2')">
     <span class="acc-left"><span class="acc-num">3</span>Piano Ristrutturazione</span>
     <span class="acc-hint">Espandi</span>
     <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
   </button>
-  <div class="accordion-body">
-    <div class="accordion-inner">
+  <div class="accordion-divider"></div>
+  <div class="accordion-body"><div class="accordion-inner">
+    <div class="form-grid cols-3" style="margin-top:.85rem">
+      <div class="field"><label>Impianto elettrico (&euro;)</label><input type="number" id="rElettrico" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Impianto idraulico (&euro;)</label><input type="number" id="rIdraulico" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Bagni (&euro;)</label><input type="number" id="rBagni" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Cucina (&euro;)</label><input type="number" id="rCucina" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Pavimenti (&euro;)</label><input type="number" id="rPavimenti" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Infissi (&euro;)</label><input type="number" id="rInfissi" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Facciata (&euro;)</label><input type="number" id="rFacciata" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Tinteggiatura (&euro;)</label><input type="number" id="rTinteggiatura" value="0" oninput="calcAll()"></div>
+      <div class="field"><label>Altro (&euro;)</label><input type="number" id="rAltro" value="0" oninput="calcAll()"></div>
+    </div>
+    <div class="metrics-row cols-3" style="margin-top:.85rem">
+      <div class="metric"><div class="metric-label">Subtotale lavori</div><div class="metric-value sm" id="subtotaleLavori">&euro; 0</div></div>
+      <div class="metric"><div class="metric-label">Contingency</div><div class="metric-value sm" id="contingencyVal">&euro; 0</div></div>
+      <div class="metric"><div class="metric-label">Tot. lavori + contingency</div><div class="metric-value sm" id="totLavoriCont">&euro; 0</div></div>
+    </div>
+    <div class="card" style="margin-top:.85rem">
+      <div class="card-title">Contingency &amp; Costi Soft</div>
       <div class="form-grid cols-3">
-        <div class="field">
-          <label>Impianto elettrico (&euro;)</label>
-          <input type="number" id="rElettrico" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Impianto idraulico (&euro;)</label>
-          <input type="number" id="rIdraulico" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Bagni (&euro;)</label>
-          <input type="number" id="rBagni" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Cucina (&euro;)</label>
-          <input type="number" id="rCucina" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Pavimenti (&euro;)</label>
-          <input type="number" id="rPavimenti" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Infissi (&euro;)</label>
-          <input type="number" id="rInfissi" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Facciata (&euro;)</label>
-          <input type="number" id="rFacciata" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Tinteggiatura (&euro;)</label>
-          <input type="number" id="rTinteggiatura" value="0" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Altro (&euro;)</label>
-          <input type="number" id="rAltro" value="0" oninput="calcAll()">
-        </div>
-      </div>
-      <div class="metrics-row cols-3" style="margin-top:.75rem">
-        <div class="metric">
-          <div class="metric-label">Subtotale lavori</div>
-          <div class="metric-value sm" id="subtotaleLavori">&euro; 0</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Contingency</div>
-          <div class="metric-value sm" id="contingencyVal">&euro; 0</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Tot. lavori + contingency</div>
-          <div class="metric-value sm" id="totLavoriCont">&euro; 0</div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:.75rem">
-        <div class="card-title">Contingency & Costi Soft</div>
-        <div class="form-grid cols-3">
-          <div class="field">
-            <label>Contingency buffer (%)</label>
-            <input type="number" id="contingencyPerc" value="15" step="1" min="0" max="50" oninput="calcAll()">
-          </div>
-          <div class="field">
-            <label>Progettazione (&euro;)</label>
-            <input type="number" id="rProgettazione" value="0" oninput="calcAll()">
-          </div>
-          <div class="field">
-            <label>Pratiche (&euro;)</label>
-            <input type="number" id="rPratiche" value="0" oninput="calcAll()">
-          </div>
-        </div>
-      </div>
-
-      <div class="total-box">
-        <div class="total-label">Totale ristrutturazione all-in</div>
-        <div class="total-value" id="totaleRistrutturazione">&euro; 0</div>
+        <div class="field"><label>Contingency buffer (%)</label><input type="number" id="contingencyPerc" value="15" step="1" min="0" max="50" oninput="calcAll()"></div>
+        <div class="field"><label>Progettazione (&euro;)</label><input type="number" id="rProgettazione" value="0" oninput="calcAll()"></div>
+        <div class="field"><label>Pratiche (&euro;)</label><input type="number" id="rPratiche" value="0" oninput="calcAll()"></div>
       </div>
     </div>
-  </div>
+    <div class="total-box"><div class="total-label">Totale ristrutturazione all-in</div><div class="total-value" id="totaleRistrutturazione">&euro; 0</div></div>
+  </div></div>
 </div>
 
-<!-- ===== 4. EXIT & VENDITA — chiuso ===== -->
+<!-- 4. EXIT STRATEGY -->
 <div class="accordion" id="acc3">
   <button class="accordion-trigger" onclick="toggleAcc('acc3')">
-    <span class="acc-left"><span class="acc-num">4</span>Exit & Vendita</span>
+    <span class="acc-left"><span class="acc-num">4</span>Exit Strategy</span>
     <span class="acc-hint">Espandi</span>
     <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
   </button>
-  <div class="accordion-body">
-    <div class="accordion-inner">
+  <div class="accordion-divider"></div>
+  <div class="accordion-body"><div class="accordion-inner" style="padding-top:.85rem">
+    <div class="exit-toggle">
+      <button class="active" id="btnFlip" onclick="setExit('flip')">Rivendita (Flip)</button>
+      <button id="btnAffitto" onclick="setExit('affitto')">Messa a reddito (Affitto)</button>
+    </div>
+
+    <!-- FLIP -->
+    <div id="exitFlip">
       <div class="form-grid cols-3">
-        <div class="field">
-          <label>Prezzo vendita stimato (&euro;)</label>
-          <input type="number" id="prezzoVendita2" readonly>
-          <div class="unit">Da Dashboard</div>
-        </div>
-        <div class="field">
-          <label>% Agenzia vendita</label>
-          <input type="number" id="percAgenziaVendita" value="3" step="0.5" min="0" max="10" oninput="calcAll()">
-        </div>
-        <div class="field">
-          <label>Mesi stimati per vendita</label>
-          <input type="number" id="mesiVendita" value="6" min="1" max="60" oninput="calcAll()">
-        </div>
+        <div class="field"><label>Prezzo vendita stimato (&euro;)</label><input type="number" id="prezzoVendita2" readonly><div class="unit">Da Dashboard</div></div>
+        <div class="field"><label>% Agenzia vendita</label><input type="number" id="percAgenziaVendita" value="3" step="0.5" min="0" max="10" oninput="calcAll()"></div>
+        <div class="field"><label>Mesi stimati per vendita</label><input type="number" id="mesiVendita" value="6" min="1" max="60" oninput="calcAll()"></div>
       </div>
-      <div style="margin:.75rem 0;display:flex;align-items:center;gap:.5rem">
-        <input type="checkbox" id="checkPlusvalenza" checked onchange="calcAll()" style="width:16px;height:16px;accent-color:var(--dark);cursor:pointer">
-        <label for="checkPlusvalenza" style="font-size:.82rem;font-weight:600;cursor:pointer">Vendita entro 5 anni dall'acquisto (plusvalenza tassabile)</label>
+      <div class="inline-check">
+        <input type="checkbox" id="checkPlusvalenza" checked onchange="calcAll()">
+        <label for="checkPlusvalenza">Vendita entro 5 anni (plusvalenza tassabile al 26%)</label>
       </div>
       <div class="metrics-row cols-2">
-        <div class="metric">
-          <div class="metric-label">Costo agenzia vendita</div>
-          <div class="metric-value sm" id="costoAgenziaVendita">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Plusvalenza lorda</div>
-          <div class="metric-value sm" id="plusvalenza">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Tassa plusvalenza (26%)</div>
-          <div class="metric-value sm" id="tassaPlusvalenza">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Ricavo netto vendita</div>
-          <div class="metric-value sm" id="ricavoNetto" style="color:var(--verde)">&mdash;</div>
-        </div>
+        <div class="metric"><div class="metric-label">Costo agenzia vendita</div><div class="metric-value sm" id="costoAgenziaVendita">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Plusvalenza lorda</div><div class="metric-value sm" id="plusvalenza">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Tassa plusvalenza (26%)</div><div class="metric-value sm" id="tassaPlusvalenza">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Ricavo netto vendita</div><div class="metric-value sm" id="ricavoNetto" style="color:var(--green)">&mdash;</div></div>
       </div>
     </div>
-  </div>
+
+    <!-- AFFITTO -->
+    <div id="exitAffitto" style="display:none">
+      <div class="form-grid cols-3">
+        <div class="field"><label>Canone mensile lordo (&euro;)</label><input type="number" id="canoneMensile" value="0" placeholder="es. 800" oninput="calcAll()"></div>
+        <div class="field"><label>Vacancy stimata (%)</label><input type="number" id="vacancyPerc" value="8" step="1" min="0" max="50" oninput="calcAll()"><div class="unit">Mesi senza inquilino su 12</div></div>
+        <div class="field"><label>Spese annuali non recuperabili (&euro;)</label><input type="number" id="speseAnnuali" value="0" placeholder="IMU, cond., manut." oninput="calcAll()"></div>
+      </div>
+      <div class="form-grid cols-2" style="margin-top:.65rem">
+        <div class="field"><label>Regime fiscale</label>
+          <select id="regimeFiscale" onchange="calcAll()">
+            <option value="cedolare21" selected>Cedolare secca 21%</option>
+            <option value="cedolare26">Cedolare secca 26% (brevi)</option>
+            <option value="irpef">IRPEF ordinaria (stima 35%)</option>
+          </select>
+        </div>
+        <div class="field"><label>Periodo analisi (anni)</label><input type="number" id="anniAffitto" value="10" min="1" max="30" oninput="calcAll()"></div>
+      </div>
+      <div class="metrics-row cols-2" style="margin-top:.85rem">
+        <div class="metric"><div class="metric-label">Rendita lorda annua</div><div class="metric-value sm" id="renditaLorda">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Rendita netta annua</div><div class="metric-value sm" id="renditaNetta">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Yield lordo</div><div class="metric-value sm" id="yieldLordo">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Yield netto</div><div class="metric-value sm" id="yieldNetto">&mdash;</div></div>
+      </div>
+      <div class="metrics-row cols-2">
+        <div class="metric"><div class="metric-label">Cashflow mensile netto</div><div class="metric-value" id="cashflowMensile" style="color:var(--green)">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Break-even</div><div class="metric-value" id="breakeven">&mdash;</div></div>
+      </div>
+    </div>
+  </div></div>
 </div>
 
-<!-- ===== 5. ROI & CASHFLOW — aperto ===== -->
+<!-- 4B. FINANZIAMENTO -->
+<div class="accordion" id="acc3b">
+  <button class="accordion-trigger" onclick="toggleAcc('acc3b')">
+    <span class="acc-left"><span class="acc-num">4b</span>Finanziamento / Leva</span>
+    <span class="acc-hint">Opzionale</span>
+    <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+  </button>
+  <div class="accordion-divider"></div>
+  <div class="accordion-body"><div class="accordion-inner" style="padding-top:.85rem">
+    <div class="inline-check" style="margin-top:0">
+      <input type="checkbox" id="checkFinanziamento" onchange="calcAll()">
+      <label for="checkFinanziamento">Utilizzo finanziamento bancario</label>
+    </div>
+    <div id="finFields" style="opacity:.4;pointer-events:none;transition:opacity .25s var(--ease)">
+      <div class="form-grid cols-3">
+        <div class="field"><label>LTV &mdash; % finanziata</label><input type="number" id="ltv" value="70" step="5" min="0" max="100" oninput="calcAll()"><div class="unit">Loan-to-Value</div></div>
+        <div class="field"><label>Tasso interesse annuo (%)</label><input type="number" id="tassoInteresse" value="3.5" step="0.1" min="0" max="15" oninput="calcAll()"></div>
+        <div class="field"><label>Durata mutuo (anni)</label><input type="number" id="durataMutuo" value="20" min="5" max="30" oninput="calcAll()"></div>
+      </div>
+      <div class="metrics-row cols-3" style="margin-top:.85rem">
+        <div class="metric"><div class="metric-label">Importo finanziato</div><div class="metric-value sm" id="importoFinanziato">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Capitale proprio</div><div class="metric-value sm" id="capitaleProprio">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Rata mensile</div><div class="metric-value sm" id="rataMensile">&mdash;</div></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 5. ROI & CASHFLOW -->
 <div class="accordion open" id="acc4">
   <button class="accordion-trigger" onclick="toggleAcc('acc4')">
-    <span class="acc-left"><span class="acc-num">5</span>ROI & Cashflow</span>
+    <span class="acc-left"><span class="acc-num">5</span>ROI &amp; Cashflow &mdash; Risultato finale</span>
     <span class="acc-hint">Espandi</span>
     <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
   </button>
-  <div class="accordion-body">
-    <div class="accordion-inner">
+  <div class="accordion-divider"></div>
+  <div class="accordion-body"><div class="accordion-inner" style="padding-top:.85rem">
+
+    <!-- FLIP RESULTS -->
+    <div id="roiFlip">
       <div class="metrics-row cols-2" style="margin-top:0">
-        <div class="metric">
-          <div class="metric-label">Investimento totale</div>
-          <div class="metric-value" id="investimentoTotale">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Ricavo netto</div>
-          <div class="metric-value" id="ricavoNettoRoi">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Margine netto</div>
-          <div class="metric-value" id="margineNetto">&mdash;</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">ROI netto</div>
-          <div class="metric-value" id="roiNetto">&mdash;</div>
+        <div class="metric"><div class="metric-label">Investimento totale</div><div class="metric-value" id="investimentoTotale">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Ricavo netto</div><div class="metric-value" id="ricavoNettoRoi">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Margine netto</div><div class="metric-value" id="margineNetto">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">ROI netto</div><div class="metric-value" id="roiNetto">&mdash;</div></div>
+      </div>
+      <div id="roiLevaWrap" style="display:none">
+        <div class="metrics-row cols-2">
+          <div class="metric metric-highlight"><div class="metric-label">ROI su capitale proprio</div><div class="metric-value" id="roiEquity" style="font-size:1.1rem">&mdash;</div></div>
+          <div class="metric"><div class="metric-label">Effetto leva</div><div class="metric-value sm" id="effettoLeva">&mdash;</div></div>
         </div>
       </div>
       <div class="metrics-row" style="grid-template-columns:1fr">
-        <div class="metric" style="background:var(--giallo-bg);border-color:var(--giallo)">
-          <div class="metric-label">ROI annualizzato</div>
-          <div class="metric-value" id="roiAnnualizzato" style="font-size:1.35rem">&mdash;</div>
-        </div>
+        <div class="metric metric-highlight" style="padding:.85rem"><div class="metric-label">ROI annualizzato</div><div class="metric-value" id="roiAnnualizzato" style="font-size:1.35rem">&mdash;</div></div>
       </div>
-      <div style="text-align:center;margin-top:.75rem">
-        <span class="semaforo" id="semaforoRoi" style="visibility:hidden">
-          <span class="dot"></span><span class="semaforo-text"></span>
-        </span>
+      <div style="text-align:center;margin-top:.85rem">
+        <span class="semaforo" id="semaforoRoi" style="visibility:hidden"><span class="dot"></span><span class="semaforo-text"></span></span>
       </div>
-
       <div class="card" style="margin-top:1rem">
         <div class="card-title">Analisi Scenari</div>
         <div class="scenario-grid">
-          <div class="scenario-card">
-            <h4>Pessimistico</h4>
+          <div class="scenario-card"><h4>Pessimistico</h4>
             <div class="scenario-row"><span class="s-label">Prezzo vendita</span><span class="s-value" id="scPessVendita">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">Costi ristrutt.</span><span class="s-value" id="scPessRistrutt">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">Margine netto</span><span class="s-value" id="scPessMargine">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">ROI netto</span><span class="s-value" id="scPessRoi">&mdash;</span></div>
             <div style="margin-top:.4rem"><span class="semaforo" id="semPess" style="visibility:hidden"><span class="dot"></span><span class="semaforo-text"></span></span></div>
           </div>
-          <div class="scenario-card base">
-            <h4>Base</h4>
+          <div class="scenario-card base"><h4>Base</h4>
             <div class="scenario-row"><span class="s-label">Prezzo vendita</span><span class="s-value" id="scBaseVendita">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">Costi ristrutt.</span><span class="s-value" id="scBaseRistrutt">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">Margine netto</span><span class="s-value" id="scBaseMargine">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">ROI netto</span><span class="s-value" id="scBaseRoi">&mdash;</span></div>
             <div style="margin-top:.4rem"><span class="semaforo" id="semBase" style="visibility:hidden"><span class="dot"></span><span class="semaforo-text"></span></span></div>
           </div>
-          <div class="scenario-card">
-            <h4>Ottimistico</h4>
+          <div class="scenario-card"><h4>Ottimistico</h4>
             <div class="scenario-row"><span class="s-label">Prezzo vendita</span><span class="s-value" id="scOttVendita">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">Costi ristrutt.</span><span class="s-value" id="scOttRistrutt">&mdash;</span></div>
             <div class="scenario-row"><span class="s-label">Margine netto</span><span class="s-value" id="scOttMargine">&mdash;</span></div>
@@ -666,238 +473,15 @@ body{
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ===== DUE DILIGENCE — pulsante help ===== -->
-<button class="dd-trigger" onclick="openChecklist()">
-  <span class="dd-icon">?</span>
-  Checklist Operativa Due Diligence
-</button>
-
-</main>
-
-<!-- ========== FOOTER ========== -->
-<footer class="footer">
-  <strong>Ratio</strong> &mdash; Il migliore affare, gi&agrave; in cima.
-</footer>
-
-<!-- ========== MODAL DUE DILIGENCE ========== -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeChecklistBg(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--dark)"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM9 13v2H7v-2h2zm0 4v2H7v-2h2zm4-4v2h-2v-2h2zm0 4v2h-2v-2h2zm4-4v2h-2v-2h2zm0 4v2h-2v-2h2z"/></svg>
-        Checklist Due Diligence
-      </h2>
-      <button class="modal-close" onclick="closeChecklist()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="checklist-header">
-        <span class="progress-text" id="progressText">0/20 verifiche completate</span>
+    <!-- AFFITTO RESULTS -->
+    <div id="roiAffitto" style="display:none">
+      <div class="metrics-row cols-2" style="margin-top:0">
+        <div class="metric"><div class="metric-label">Investimento totale</div><div class="metric-value" id="invTotAff">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Rendita netta annua</div><div class="metric-value" id="rendNetAff">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Yield netto</div><div class="metric-value" id="yieldNetAff">&mdash;</div></div>
+        <div class="metric"><div class="metric-label">Break-even</div><div class="metric-value" id="beAff">&mdash;</div></div>
       </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar" id="progressBar" style="width:0%"></div>
-      </div>
-      <div id="checklistContainer"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ================================================================
-   RATIO DEAL ANALYSER — LOGICA
-   ================================================================ */
-
-// === UTILITY ===
-function val(id){ return parseFloat(document.getElementById(id).value) || 0; }
-function fmt(n){ return n.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:0}); }
-function fmtE(n){ return '\u20AC '+fmt(n); }
-
-// === ACCORDION ===
-function toggleAcc(id){
-  document.getElementById(id).classList.toggle('open');
-}
-
-// === MODAL ===
-function openChecklist(){
-  document.getElementById('modalOverlay').classList.add('visible');
-  document.body.style.overflow='hidden';
-}
-function closeChecklist(){
-  document.getElementById('modalOverlay').classList.remove('visible');
-  document.body.style.overflow='';
-}
-function closeChecklistBg(e){
-  if(e.target===e.currentTarget) closeChecklist();
-}
-
-// === SEMAFORO ===
-function setSemaforo(el, roi){
-  el.style.visibility='visible';
-  const txt=el.querySelector('.semaforo-text');
-  el.classList.remove('verde','giallo','rosso');
-  if(roi>20){el.classList.add('verde');txt.textContent='Ottimo (>20%)';}
-  else if(roi>=10){el.classList.add('giallo');txt.textContent='Discreto (10-20%)';}
-  else{el.classList.add('rosso');txt.textContent='Basso (<10%)';}
-}
-
-// === STIMA NOTARILI ===
-function stimaNotarili(prezzo){
-  if(prezzo<=0) return 0;
-  if(prezzo<=100000) return 2000;
-  if(prezzo<=250000) return 2500;
-  if(prezzo<=500000) return 3000;
-  return 3500;
-}
-
-// === CALCOLO COSTI ACQUISTO ===
-function calcolaCostiAcquisto(prezzo, percAgenzia, tipo){
-  let impostaRegistro=0, imposteIpoCat=0;
-  if(tipo==='prima'){
-    impostaRegistro=Math.max(prezzo*0.02, 1000);
-    imposteIpoCat=100;
-  } else {
-    impostaRegistro=Math.max(prezzo*0.09, 1000);
-    imposteIpoCat=100;
-  }
-  const notarili=stimaNotarili(prezzo);
-  const agenzia=prezzo*(percAgenzia/100);
-  const totale=prezzo+impostaRegistro+imposteIpoCat+notarili+agenzia;
-  return {impostaRegistro, imposteIpoCat, notarili, agenzia, totale};
-}
-
-// === CALCOLO RISTRUTTURAZIONE ===
-function calcolaRistrutturazione(){
-  const ids=['rElettrico','rIdraulico','rBagni','rCucina','rPavimenti','rInfissi','rFacciata','rTinteggiatura','rAltro'];
-  let sub=0;
-  ids.forEach(id=> sub+=val(id));
-  const contPerc=val('contingencyPerc')/100;
-  const contingency=sub*contPerc;
-  const totLavori=sub+contingency;
-  const progettazione=val('rProgettazione');
-  const pratiche=val('rPratiche');
-  const totale=totLavori+progettazione+pratiche;
-  return {sub, contingency, totLavori, progettazione, pratiche, totale};
-}
-
-// === CALCOLO SCENARIO ===
-function calcolaScenario(prezzoVendita, costiAcquistoAllIn, ristrutturazioneTotale, percAgVendita, plusvalenzaFlag, mesi){
-  const investimentoTotale=costiAcquistoAllIn+ristrutturazioneTotale;
-  const agenziaVendita=prezzoVendita*(percAgVendita/100);
-  const plusvalenza=prezzoVendita-investimentoTotale;
-  let tassaPlusv=0;
-  if(plusvalenzaFlag && plusvalenza>0) tassaPlusv=plusvalenza*0.26;
-  const ricavoNetto=prezzoVendita-agenziaVendita-tassaPlusv;
-  const margineNetto=ricavoNetto-investimentoTotale;
-  const roiNetto=investimentoTotale>0?(margineNetto/investimentoTotale)*100:0;
-  const roiAnn=mesi>0?roiNetto*(12/mesi):0;
-  return {investimentoTotale, ricavoNetto, margineNetto, roiNetto, roiAnn, agenziaVendita, plusvalenza, tassaPlusv};
-}
-
-// === MASTER CALC ===
-function calcAll(){
-  const prezzoAcq=val('prezzoAcquisto');
-  const prezzoVend=val('prezzoVendita');
-  const mq=val('mq');
-
-  // Sync readonly
-  document.getElementById('prezzoAcquisto2').value=prezzoAcq||'';
-  document.getElementById('prezzoVendita2').value=prezzoVend||'';
-
-  // --- DASHBOARD ---
-  const mqA=mq>0?prezzoAcq/mq:0;
-  const mqV=mq>0?prezzoVend/mq:0;
-  const margineLordo=prezzoVend-prezzoAcq;
-  const roiLordo=prezzoAcq>0?(margineLordo/prezzoAcq)*100:0;
-
-  document.getElementById('mqAcquisto').textContent=mq>0?fmtE(Math.round(mqA)):'\u2014';
-  document.getElementById('mqVendita').textContent=mq>0?fmtE(Math.round(mqV)):'\u2014';
-  document.getElementById('margineLordo').textContent=prezzoAcq>0?fmtE(margineLordo):'\u2014';
-  document.getElementById('roiLordo').textContent=prezzoAcq>0?roiLordo.toFixed(1)+'%':'\u2014';
-
-  const semDash=document.getElementById('semaforoDash');
-  if(prezzoAcq>0 && prezzoVend>0){setSemaforo(semDash,roiLordo);}
-  else{semDash.style.visibility='hidden';}
-
-  // --- COSTI ACQUISTO ---
-  const percAg=val('percAgenzia');
-  const tipo=document.getElementById('tipoImmobile').value;
-  const ca=calcolaCostiAcquisto(prezzoAcq,percAg,tipo);
-  document.getElementById('impostaRegistro').textContent=fmtE(Math.round(ca.impostaRegistro));
-  document.getElementById('imposteIpoCat').textContent=fmtE(ca.imposteIpoCat);
-  document.getElementById('costiNotarili').textContent=fmtE(ca.notarili);
-  document.getElementById('costiAgenzia').textContent=fmtE(Math.round(ca.agenzia));
-  document.getElementById('totaleAcquisto').textContent=fmtE(Math.round(ca.totale));
-
-  // --- RISTRUTTURAZIONE ---
-  const ri=calcolaRistrutturazione();
-  document.getElementById('subtotaleLavori').textContent=fmtE(ri.sub);
-  document.getElementById('contingencyVal').textContent=fmtE(Math.round(ri.contingency));
-  document.getElementById('totLavoriCont').textContent=fmtE(Math.round(ri.totLavori));
-  document.getElementById('totaleRistrutturazione').textContent=fmtE(Math.round(ri.totale));
-
-  // --- EXIT & VENDITA ---
-  const percAgV=val('percAgenziaVendita');
-  const mesi=val('mesiVendita');
-  const plusvFlag=document.getElementById('checkPlusvalenza').checked;
-  const sc=calcolaScenario(prezzoVend, ca.totale, ri.totale, percAgV, plusvFlag, mesi);
-
-  document.getElementById('costoAgenziaVendita').textContent=fmtE(Math.round(sc.agenziaVendita));
-  document.getElementById('plusvalenza').textContent=fmtE(Math.round(sc.plusvalenza));
-  document.getElementById('tassaPlusvalenza').textContent=plusvFlag&&sc.plusvalenza>0?fmtE(Math.round(sc.tassaPlusv)):'\u20AC 0 (non applicabile)';
-  document.getElementById('ricavoNetto').textContent=fmtE(Math.round(sc.ricavoNetto));
-
-  // --- ROI & CASHFLOW ---
-  document.getElementById('investimentoTotale').textContent=fmtE(Math.round(sc.investimentoTotale));
-  document.getElementById('ricavoNettoRoi').textContent=fmtE(Math.round(sc.ricavoNetto));
-  document.getElementById('margineNetto').textContent=fmtE(Math.round(sc.margineNetto));
-  document.getElementById('margineNetto').style.color=sc.margineNetto>=0?'var(--verde)':'var(--rosso)';
-  document.getElementById('roiNetto').textContent=sc.roiNetto.toFixed(1)+'%';
-  document.getElementById('roiNetto').style.color=sc.roiNetto>=10?'var(--verde)':'var(--rosso)';
-  document.getElementById('roiAnnualizzato').textContent=sc.roiAnn.toFixed(1)+'%';
-  document.getElementById('roiAnnualizzato').style.color=sc.roiAnn>=10?'var(--verde)':'var(--rosso)';
-
-  const semRoi=document.getElementById('semaforoRoi');
-  if(prezzoAcq>0 && prezzoVend>0){setSemaforo(semRoi,sc.roiNetto);}
-  else{semRoi.style.visibility='hidden';}
-
-  // --- SCENARI ---
-  // Pessimistico: vendita -10%, ristrutturazione +20%
-  const pessVend=prezzoVend*0.9;
-  const pessRistr=ri.totale*1.2;
-  const scPess=calcolaScenario(pessVend, ca.totale, pessRistr, percAgV, plusvFlag, mesi);
-  document.getElementById('scPessVendita').textContent=fmtE(Math.round(pessVend));
-  document.getElementById('scPessRistrutt').textContent=fmtE(Math.round(pessRistr));
-  document.getElementById('scPessMargine').textContent=fmtE(Math.round(scPess.margineNetto));
-  document.getElementById('scPessMargine').style.color=scPess.margineNetto>=0?'var(--verde)':'var(--rosso)';
-  document.getElementById('scPessRoi').textContent=scPess.roiNetto.toFixed(1)+'%';
-  if(prezzoAcq>0 && prezzoVend>0) setSemaforo(document.getElementById('semPess'),scPess.roiNetto);
-
-  // Base
-  document.getElementById('scBaseVendita').textContent=fmtE(Math.round(prezzoVend));
-  document.getElementById('scBaseRistrutt').textContent=fmtE(Math.round(ri.totale));
-  document.getElementById('scBaseMargine').textContent=fmtE(Math.round(sc.margineNetto));
-  document.getElementById('scBaseMargine').style.color=sc.margineNetto>=0?'var(--verde)':'var(--rosso)';
-  document.getElementById('scBaseRoi').textContent=sc.roiNetto.toFixed(1)+'%';
-  if(prezzoAcq>0 && prezzoVend>0) setSemaforo(document.getElementById('semBase'),sc.roiNetto);
-
-  // Ottimistico: vendita +5%, ristrutturazione -5%
-  const ottVend=prezzoVend*1.05;
-  const ottRistr=ri.totale*0.95;
-  const scOtt=calcolaScenario(ottVend, ca.totale, ottRistr, percAgV, plusvFlag, mesi);
-  document.getElementById('scOttVendita').textContent=fmtE(Math.round(ottVend));
-  document.getElementById('scOttRistrutt').textContent=fmtE(Math.round(ottRistr));
-  document.getElementById('scOttMargine').textContent=fmtE(Math.round(scOtt.margineNetto));
-  document.getElementById('scOttMargine').style.color=scOtt.margineNetto>=0?'var(--verde)':'var(--rosso)';
-  document.getElementById('scOttRoi').textContent=scOtt.roiNetto.toFixed(1)+'%';
-  if(prezzoAcq>0 && prezzoVend>0) setSemaforo(document.getElementById('semOtt'),scOtt.roiNetto);
-}
-
-// === RESET ===
-function resetAll(){
-  if(!confirm('Resettare tutti i dati inseriti?')) return;
-  document.querySelectorAll('input[type="number"]').forEach(i=>{
-    if(!i.readOnly){
-      if(['percAgenzia','percAgenziaVendita'].includes(i.id)) i.value='3';
-      else if(i.id==='mesiVendita') i.value='6';
+      <div id="roiLevaAffWrap" style="display:none">
+        <div class="metrics-row cols-3">
+          <div class="metric
